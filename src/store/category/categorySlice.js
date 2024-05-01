@@ -23,14 +23,14 @@ const categorySlice = createSlice({
     },
     extraReducers: (builder) => {
         builder
-        .addCase(categoryRequestAsync.pending.type, (state) => {
+        .addCase(categoryRequestAsync.pending, (state) => {
             state.error = '';
         })
-        .addCase(categoryRequestAsync.fulfilled.type, (state, action) => {
+        .addCase(categoryRequestAsync.fulfilled, (state, action) => {
             state.error = '';
             state.category = action.payload;
         })
-        .addCase(categoryRequestAsync.rejected.type, (state, action) => {
+        .addCase(categoryRequestAsync.rejected, (state, action) => {
             state.error = action.payload.error;
         })
     }
