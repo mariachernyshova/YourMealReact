@@ -2,11 +2,12 @@ import classNames from 'classnames';
 import style from './ModalDelivery.module.css';
 import { useDispatch, useSelector } from 'react-redux';
 import { closeModal } from '../../store/modalDelivery/modalDeliverySlice';
-import { updateFormValue } from '../../store/form/formSlice';
+import { submitForm, updateFormValue } from '../../store/form/formSlice';
 
 export const ModalDelivery = () => {
   const { isOpen } = useSelector(state => state.modal);
   const form = useSelector(state => state.form);
+  const { orderList } = useSelector(state => state.order);
   const dispatch = useDispatch();
 
   const handleInputChange = (e) => {
@@ -14,7 +15,12 @@ export const ModalDelivery = () => {
       field: e.target.name,
       value: e.target.value,
     }))
-  }
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    dispatch(submitForm({...form, orderList}));
+  };
 
   return isOpen && (
     <div 
@@ -29,7 +35,7 @@ export const ModalDelivery = () => {
         <div className={style.container}>
           <h2 className={style.title}>Доставка</h2>
 
-          <form className={style.form} id='delivery'>
+          <form className={style.form} id='delivery' onSubmit={handleSubmit}>
             <fieldset className={style.fieldset}>
               <input
                 className={style.input}
@@ -75,32 +81,34 @@ export const ModalDelivery = () => {
               </label>
             </fieldset>
 
-            <fieldset className={style.fieldset}>
-              <input
-                className={style.input}
-                type='text'
-                name='address'
-                value={form.address}
-                placeholder='Улица, дом, квартира'
-                onChange={handleInputChange}
-              />
-              <input
-                className={classNames(style.input, style.input_half)}
-                type='number'
-                name='floor'
-                value={form.floor}
-                placeholder='Этаж'
-                onChange={handleInputChange}
-              />
-              <input
-                className={classNames(style.input, style.input_half)}
-                type='number'
-                name='intercom'
-                value={form.intercom}
-                placeholder='Домофон'
-                onChange={handleInputChange}
-              />
-            </fieldset>
+            {form.format === 'delivery' && (
+              <fieldset className={style.fieldset}>
+                <input
+                  className={style.input}
+                  type='text'
+                  name='address'
+                  value={form.address}
+                  placeholder='Улица, дом, квартира'
+                  onChange={handleInputChange}
+                />
+                <input
+                  className={classNames(style.input, style.input_half)}
+                  type='number'
+                  name='floor'
+                  value={form.floor}
+                  placeholder='Этаж'
+                  onChange={handleInputChange}
+                />
+                <input
+                  className={classNames(style.input, style.input_half)}
+                  type='number'
+                  name='intercom'
+                  value={form.intercom}
+                  placeholder='Домофон'
+                  onChange={handleInputChange}
+                />
+              </fieldset> 
+            )}
           </form>
 
           <button className={style.submit} type='submit' form='delivery'>
